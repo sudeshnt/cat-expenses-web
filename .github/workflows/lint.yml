@@ -1,11 +1,12 @@
-name: Run Unit Tests
+name: Lint PR
 
 on:
   pull_request:
-    branches: ["main"]
+    branches:
+      - main
 
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
 
     steps:
@@ -14,4 +15,4 @@ jobs:
         with:
           node-version: 18
       - run: pnpm i
-      - run: pnpm test
+      - run: pnpm lint
