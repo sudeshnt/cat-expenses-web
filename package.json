@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "test": "npx jest",
-    "postinstall": "prisma generate"
+    "vercel-build": "prisma generate && prisma migrate deploy && next build",
+    "prisma:generate": "prisma generate"
   },
   "dependencies": {
     "@chakra-ui/next-js": "^2.1.5",
