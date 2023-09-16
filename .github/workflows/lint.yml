@@ -1,11 +1,12 @@
-name: Run Unit Tests
+name: Lint PR
 
 on:
   pull_request:
-    branches: ["main"]
+    branches:
+      - main
 
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,4 +19,4 @@ jobs:
           version: 8
           run_install: false
       - run: pnpm i
-      - run: pnpm test
+      - run: pnpm lint
