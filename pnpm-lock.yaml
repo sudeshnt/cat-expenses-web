@@ -23,9 +23,6 @@ dependencies:
   '@prisma/client':
     specifier: 5.3.1
     version: 5.3.1(prisma@5.3.1)
-  '@types/lodash':
-    specifier: ^4.14.198
-    version: 4.14.198
   '@types/node':
     specifier: 20.6.0
     version: 20.6.0
@@ -65,9 +62,9 @@ dependencies:
   react-hook-form:
     specifier: ^7.46.1
     version: 7.46.1(react@18.2.0)
-  react-typed:
-    specifier: ^1.2.0
-    version: 1.2.0(react-dom@18.2.0)(react@18.2.0)
+  react-type-animation:
+    specifier: ^3.1.0
+    version: 3.1.0(prop-types@15.8.1)(react-dom@18.2.0)(react@18.2.0)
   tailwindcss:
     specifier: 3.3.3
     version: 3.3.3
@@ -75,10 +72,13 @@ dependencies:
     specifier: 5.2.2
     version: 5.2.2
   zod:
-    specifier: link:@hookform/resolvers/zod
-    version: link:@hookform/resolvers/zod
+    specifier: ^3.21.4
+    version: 3.21.4
 
 devDependencies:
+  '@types/lodash':
+    specifier: ^4.14.198
+    version: 4.14.198
   prisma:
     specifier: ^5.3.1
     version: 5.3.1
@@ -1632,7 +1632,6 @@ packages:
 
   /@types/lodash@4.14.198:
     resolution: {integrity: sha512-trNJ/vtMZYMLhfN45uLq4ShQSw0/S7xCTLLVM+WM1rmFpba/VS42jVUgaO3w/NOLiWR/09lnYk0yMaA/atdIsg==}
-    dev: false
 
   /@types/node@20.6.0:
     resolution: {integrity: sha512-najjVq5KN2vsH2U/xyh2opaSEz6cZMR2SetLIlxlj08nOcmPOemJmUK2o4kUzfLqfrWE0PIrNeE16XhYDd3nqg==}
@@ -3745,16 +3744,16 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /react-typed@1.2.0(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-aDsaA6zkjAFJs8285APOqE85l/kwJ0/ZJmBhARwUrza4TTttrMM5FcMCGEDdThdfUdHo/0l9WXmxp1m2ik4qdw==}
+  /react-type-animation@3.1.0(prop-types@15.8.1)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-Ju74SpUFpSINqlGU8UeFAF+AnAn0nZcc8MB0Ho6QvRkh8uDKkOzAiMD3l9xEmkbKXnSYsljfVgIDM/zwqEImpQ==}
     peerDependencies:
-      react: ^16.3.0
-      react-dom: ^16.3.0
+      prop-types: ^15.5.4
+      react: '>= 15.0.0'
+      react-dom: '>= 15.0.0'
     dependencies:
       prop-types: 15.8.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-      typed.js: 2.0.16
     dev: false
 
   /react@18.2.0:
@@ -4194,10 +4193,6 @@ packages:
       call-bind: 1.0.2
       for-each: 0.3.3
       is-typed-array: 1.1.12
-    dev: false
-
-  /typed.js@2.0.16:
-    resolution: {integrity: sha512-IBB52GlJiTUOnomwdVVf7lWgC6gScn8md+26zTHj5oJWA+4pSuclHE76rbGI2hnyO+NT+QXdIUHbfjAY5nEtcw==}
     dev: false
 
   /typescript@5.2.2:

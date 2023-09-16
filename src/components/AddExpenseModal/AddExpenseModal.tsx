@@ -29,7 +29,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { CatExpenseCategory, CatExpenseFormData } from "./types";
 import { useState, useTransition } from "react";
 import { createExpense } from "@/actions/expenseActions";
-import Typed from "react-typed";
+import { TypeAnimation } from "react-type-animation";
 
 const expenseFormValidationSchema = z.object({
   name: z.string().nonempty("Please enter item name"),
@@ -185,15 +185,12 @@ export const AddExpenseModal = () => {
                   Random cat Fact:
                 </Text>
                 <Box>
-                  <Text as="cite" size="xs">
-                    <Typed
-                      loop={false}
-                      typeSpeed={40}
-                      showCursor
-                      cursorChar="|"
-                      strings={[catFact]}
-                    />
-                  </Text>
+                  <TypeAnimation
+                    sequence={[catFact]}
+                    wrapper="span"
+                    speed={55}
+                    style={{ fontSize: "15px", display: "inline-block" }}
+                  />
                 </Box>
               </Stack>
             </Grid>
