@@ -92,7 +92,7 @@ export const AddExpenseModal = (props: AddExpenseModalProps) => {
     if (!editingExpense) return;
     if (!isOpen) onOpen();
     reset(editingExpense);
-  }, [isOpen, editingExpense]);
+  }, [isOpen, editingExpense, onOpen, reset]);
 
   return (
     <>

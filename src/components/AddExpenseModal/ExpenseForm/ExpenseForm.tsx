@@ -62,8 +62,9 @@ export const ExpenseForm = (props: ExpenseFormProps): JSX.Element => {
               pointerEvents="none"
               color="gray.300"
               fontSize="1.2em"
-              children="$"
-            />
+            >
+              $
+            </InputLeftElement>
             <Input
               type="number"
               {...register("amount", {
