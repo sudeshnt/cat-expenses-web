@@ -11,16 +11,23 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { CatExpense } from "@prisma/client";
 import { AddExpenseModal } from "../AddExpenseModal";
 import { numberToUSD } from "./utils/currencyUtils";
 import { useMemo, useState } from "react";
 import { DeleteExpenses } from "./DeleteConfirmationAlert";
 import groupBy from "lodash/groupBy";
 import sumBy from "lodash/sumBy";
+import { CatExpenseCategory } from "../AddExpenseModal/types";
+
+type Expense = {
+  id: string;
+  name: string;
+  category: CatExpenseCategory;
+  amount: number;
+};
 
 type ExpensesTableProps = {
-  expenses: CatExpense[];
+  expenses: Expense[];
 };
 
 type HighestSpendingCategoryResult = {

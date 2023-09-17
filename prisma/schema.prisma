@@ -19,3 +19,5 @@ model CatExpense {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 }
+// sudeshnt93
+// DK8i9PKJ1o4ZTfVw
