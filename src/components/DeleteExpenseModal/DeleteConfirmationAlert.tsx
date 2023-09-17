@@ -10,12 +10,7 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import {
-  Dispatch,
-  SetStateAction,
-  useRef,
-  useTransition
-} from "react";
+import { Dispatch, SetStateAction, useRef, useTransition } from "react";
 
 type DeleteExpensesProps = {
   selectedExpenseIds: Set<string>;
@@ -62,7 +57,11 @@ export function DeleteExpenses(props: DeleteExpensesProps): JSX.Element {
 
   return (
     <>
-      <Button variant="outline" colorScheme="blue" onClick={handleClickDelete}>
+      <Button
+        variant="outline"
+        colorScheme="yellow"
+        onClick={handleClickDelete}
+      >
         Delete Expense
       </Button>
 
