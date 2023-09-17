@@ -1,31 +1,40 @@
 "use client";
+
 import * as z from "zod";
 
 import { createExpense, editExpense } from "@/actions/expenseActions";
 import {
   Button,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
   Grid,
+  HStack,
+  Input,
+  InputGroup,
+  InputLeftElement,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Select,
+  VStack,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Dispatch,
-  SetStateAction,
-  Suspense,
-  useEffect,
-  useTransition,
-} from "react";
+import { Dispatch, SetStateAction, useEffect, useTransition } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { CatExpenseFormData, type Expense } from "../types";
+import { CatExpenseCategory, CatExpenseFormData, type Expense } from "../types";
 import { CatFact } from "./CatFact";
-import { ExpenseForm } from "./ExpenseForm";
+
+const defaultValues = {
+  name: undefined,
+  category: undefined,
+  amount: undefined,
+};
 
 const expenseFormValidationSchema = z.object({
   name: z.string().nonempty("Please enter item name"),
@@ -52,11 +61,16 @@ export const AddExpenseModal = (props: AddExpenseModalProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isPending, startTransition] = useTransition();
 
-  const { register, handleSubmit, reset, formState } =
-    useForm<CatExpenseFormData>({
-      mode: "onChange",
-      resolver: zodResolver(expenseFormValidationSchema),
-    });
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { isValid, errors },
+  } = useForm<CatExpenseFormData>({
+    mode: "onChange",
+    defaultValues,
+    resolver: zodResolver(expenseFormValidationSchema),
+  });
 
   const onSubmitExpenseForm: SubmitHandler<CatExpenseFormData> = async (
     data
@@ -84,15 +98,17 @@ export const AddExpenseModal = (props: AddExpenseModalProps) => {
 
   const onCloseExpenseModal = () => {
     if (editingExpense) setEditingExpense?.(null);
-    reset();
     onClose();
+    reset(defaultValues);
   };
 
   useEffect(() => {
     if (!editingExpense) return;
-    if (!isOpen) onOpen();
     reset(editingExpense);
-  }, [isOpen, editingExpense, onOpen, reset]);
+    if (!isOpen) {
+      onOpen();
+    }
+  }, [editingExpense]);
 
   return (
     <>
@@ -106,16 +122,84 @@ export const AddExpenseModal = (props: AddExpenseModalProps) => {
           <ModalCloseButton />
           <ModalBody>
             <Grid templateColumns="repeat(2, 1fr)" gap={6}>
-              <ExpenseForm
-                isLoading={isPending}
-                formState={formState}
-                register={register}
-                onClose={onCloseExpenseModal}
-                onSubmit={handleSubmit(onSubmitExpenseForm)}
-              />
-              <Suspense fallback="loading">
-                <CatFact isOpen={isOpen} />
-              </Suspense>
+              <form onSubmit={handleSubmit(onSubmitExpenseForm)}>
+                <VStack spacing={5}>
+                  <FormControl isRequired isInvalid={!!errors.name}>
+                    <FormLabel fontSize="sm" m={1} color="GrayText">
+                      Item
+                    </FormLabel>
+                    <Input
+                      type="text"
+                      placeholder="Enter Item Name"
+                      {...register("name")}
+                    />
+                    <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
+                  </FormControl>
+                  <FormControl isRequired isInvalid={!!errors.category}>
+                    <FormLabel fontSize="sm" m={1} color="GrayText">
+                      Category
+                    </FormLabel>
+                    <Select
+                      placeholder="Select option"
+                      {...register("category")}
+                    >
+                      {Object.values(CatExpenseCategory).map(
+                        (category, index) => (
+                          <option key={index} value={category}>
+                            {category}
+                          </option>
+                        )
+                      )}
+                    </Select>
+                    <FormErrorMessage>
+                      {errors.category?.message}
+                    </FormErrorMessage>
+                  </FormControl>
+                  <FormControl isRequired isInvalid={!!errors.amount}>
+                    <FormLabel fontSize="sm" m={1} color="GrayText">
+                      Amount
+                    </FormLabel>
+                    <InputGroup>
+                      <InputLeftElement
+                        pointerEvents="none"
+                        color="gray.300"
+                        fontSize="1.2em"
+                      >
+                        $
+                      </InputLeftElement>
+                      <Input
+                        type="number"
+                        {...register("amount", {
+                          valueAsNumber: true,
+                        })}
+                      />
+                    </InputGroup>
+                    <FormErrorMessage>
+                      {errors.amount?.message}
+                    </FormErrorMessage>
+                  </FormControl>
+                  <HStack w="full" p={2} justify="flex-end">
+                    <Button
+                      variant="outline"
+                      colorScheme="yellow"
+                      mr={3}
+                      onClick={onCloseExpenseModal}
+                    >
+                      Close
+                    </Button>
+                    <Button
+                      type="submit"
+                      variant="outline"
+                      colorScheme="yellow"
+                      isDisabled={!isValid}
+                      isLoading={isPending}
+                    >
+                      Submit
+                    </Button>
+                  </HStack>
+                </VStack>
+              </form>
+              <CatFact isOpen={isOpen} />
             </Grid>
           </ModalBody>
         </ModalContent>
