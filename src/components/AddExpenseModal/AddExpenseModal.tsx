@@ -25,13 +25,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Dispatch,
-  SetStateAction,
-  Suspense,
-  useEffect,
-  useTransition,
-} from "react";
+import { Dispatch, SetStateAction, useEffect, useTransition } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { CatExpenseCategory, CatExpenseFormData, type Expense } from "../types";
 import { CatFact } from "./CatFact";
@@ -205,9 +199,7 @@ export const AddExpenseModal = (props: AddExpenseModalProps) => {
                   </HStack>
                 </VStack>
               </form>
-              <Suspense fallback="loading">
-                <CatFact isOpen={isOpen} />
-              </Suspense>
+              <CatFact isOpen={isOpen} />
             </Grid>
           </ModalBody>
         </ModalContent>
