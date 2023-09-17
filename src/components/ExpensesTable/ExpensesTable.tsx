@@ -5,10 +5,13 @@ import {
   Button,
   Checkbox,
   HStack,
+  Image,
+  Stack,
   Table,
   TableContainer,
   Tbody,
   Td,
+  Text,
   Th,
   Thead,
   Tr,
@@ -99,47 +102,66 @@ export const ExpensesTable = (props: ExpensesTableProps) => {
       </HStack>
       <TableContainer className="max-h-[calc(100%-70px)]" overflowY="scroll">
         <Table variant="simple">
-          <Thead>
+          <Thead bg="#f1e0cf">
             <Tr>
               <Th>
                 <Checkbox
+                  colorScheme="orange"
                   borderColor="yellow.600"
                   onChange={handleSelectAllExpenseRows}
                 />
               </Th>
-              <Th>Item</Th>
-              <Th>Category</Th>
-              <Th isNumeric>Amount</Th>
+              <Th fontSize="small">Item Name</Th>
+              <Th fontSize="small">Category</Th>
+              <Th isNumeric fontSize="small">
+                Amount
+              </Th>
               <Th></Th>
             </Tr>
           </Thead>
           <Tbody>
-            {expenses.map((expense, index) => (
-              <Tr
-                key={expense.id}
-                bgColor={
-                  highestSpendingCategories.includes(expense.category)
-                    ? "gray.300"
-                    : ""
-                }
-              >
-                <Td>
-                  <Checkbox
-                    borderColor="yellow.600"
-                    isChecked={selectedExpenseIds.has(expense.id)}
-                    onChange={(e) => handleSelectExpenseRow(expense.id)}
-                  />
-                </Td>
-                <Td>{expense.name}</Td>
-                <Td>{expense.category}</Td>
-                <Td isNumeric>{numberToUSD(expense.amount)}</Td>
-                <Td w={1}>
-                  <Button onClick={(_) => setEditingExpense(expense)}>
-                    <EditIcon color="yellow.700" />
-                  </Button>
+            {expenses.length > 0 ? (
+              expenses.map((expense, index) => (
+                <Tr
+                  key={expense.id}
+                  bgColor={
+                    highestSpendingCategories.includes(expense.category)
+                      ? "gray.300"
+                      : ""
+                  }
+                >
+                  <Td>
+                    <Checkbox
+                      colorScheme="orange"
+                      borderColor="yellow.600"
+                      isChecked={selectedExpenseIds.has(expense.id)}
+                      onChange={(e) => handleSelectExpenseRow(expense.id)}
+                    />
+                  </Td>
+                  <Td color="gray.600">{expense.name}</Td>
+                  <Td color="gray.600">{expense.category}</Td>
+                  <Td isNumeric color="gray.600">
+                    {numberToUSD(expense.amount)}
+                  </Td>
+                  <Td w={1}>
+                    <Button onClick={(_) => setEditingExpense(expense)}>
+                      <EditIcon color="yellow.700" />
+                    </Button>
+                  </Td>
+                </Tr>
+              ))
+            ) : (
+              <Tr>
+                <Td colSpan={5}>
+                  <Stack alignItems="center">
+                    <Image src="./empty-state.svg" h={300} />
+                    <Text fontSize="md" color="gray.600">
+                      No expenses found!
+                    </Text>
+                  </Stack>
                 </Td>
               </Tr>
-            ))}
+            )}
           </Tbody>
         </Table>
       </TableContainer>

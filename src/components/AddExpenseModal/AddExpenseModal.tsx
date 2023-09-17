@@ -126,7 +126,7 @@ export const AddExpenseModal = (props: AddExpenseModalProps) => {
                 <VStack spacing={5}>
                   <FormControl isRequired isInvalid={!!errors.name}>
                     <FormLabel fontSize="sm" m={1} color="GrayText">
-                      Item
+                      Item Name
                     </FormLabel>
                     <Input
                       type="text"
