@@ -10,7 +10,13 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { Dispatch, SetStateAction, useRef, useTransition } from "react";
+import {
+  Dispatch,
+  RefObject,
+  SetStateAction,
+  useRef,
+  useTransition,
+} from "react";
 
 type DeleteExpensesProps = {
   selectedExpenseIds: Set<string>;
@@ -22,7 +28,7 @@ export function DeleteExpenses(props: DeleteExpensesProps): JSX.Element {
 
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const cancelRef = useRef() as any;
+  const cancelRef: RefObject<any> = useRef();
   const [isPending, startTransition] = useTransition();
 
   const handleClickDelete = () => {
