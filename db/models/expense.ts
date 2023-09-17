@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 import { v4 as uuidv4 } from "uuid";
 
-const expenseSchema = new Schema({
+const expenseSchema: Schema = new Schema({
   id: {
     type: String,
     default: () => uuidv4(),
@@ -11,7 +11,5 @@ const expenseSchema = new Schema({
   amount: Number,
 });
 
-const Expense =
+export const Expense =
   mongoose.models.Expense || mongoose.model("Expense", expenseSchema);
-
-export default Expense;

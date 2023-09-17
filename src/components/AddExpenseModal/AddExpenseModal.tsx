@@ -2,34 +2,34 @@
 import * as z from "zod";
 
 import {
+  Box,
   Button,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Grid,
+  HStack,
+  Input,
   Modal,
-  ModalOverlay,
+  ModalBody,
+  ModalCloseButton,
   ModalContent,
   ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  useDisclosure,
-  FormControl,
-  FormLabel,
-  Input,
-  VStack,
+  ModalOverlay,
   Select,
-  HStack,
-  FormErrorMessage,
-  useToast,
-  Box,
-  Text,
-  Grid,
   Stack,
+  Text,
+  VStack,
+  useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 
-import { SubmitHandler, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { CatExpenseCategory, CatExpenseFormData } from "./types";
-import { useState, useTransition } from "react";
 import { createExpense } from "@/actions/expenseActions";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState, useTransition } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { TypeAnimation } from "react-type-animation";
+import { CatExpenseCategory, CatExpenseFormData } from "./types";
 
 const expenseFormValidationSchema = z.object({
   name: z.string().nonempty("Please enter item name"),
@@ -189,7 +189,11 @@ export const AddExpenseModal = () => {
                     sequence={[catFact]}
                     wrapper="span"
                     speed={55}
-                    style={{ fontSize: "15px", display: "inline-block" }}
+                    style={{
+                      fontSize: "15px",
+                      display: "inline-block",
+                      fontStyle: "italic",
+                    }}
                   />
                 </Box>
               </Stack>
