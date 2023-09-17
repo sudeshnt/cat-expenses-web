@@ -1,6 +1,8 @@
 "use client";
 
+import { EditIcon } from "@chakra-ui/icons";
 import {
+  Button,
   Checkbox,
   HStack,
   Table,
@@ -13,18 +15,11 @@ import {
 } from "@chakra-ui/react";
 import groupBy from "lodash/groupBy";
 import sumBy from "lodash/sumBy";
-import { useMemo, useState } from "react";
+import { ChangeEvent, useMemo, useState } from "react";
 import { AddExpenseModal } from "../AddExpenseModal";
-import { CatExpenseCategory } from "../AddExpenseModal/types";
 import { DeleteExpenses } from "../DeleteExpenseModal";
+import { Expense } from "../types";
 import { numberToUSD } from "./utils/currencyUtils";
-
-type Expense = {
-  id: string;
-  name: string;
-  category: CatExpenseCategory;
-  amount: number;
-};
 
 type ExpensesTableProps = {
   expenses: Expense[];
@@ -38,13 +33,14 @@ type HighestSpendingCategoryResult = {
 export const ExpensesTable = (props: ExpensesTableProps) => {
   const { expenses } = props;
 
+  const [editingExpense, setEditingExpense] = useState<Expense | null>(null);
   const [selectedExpenseIds, setSelectedExpenseIds] = useState<Set<string>>(
     new Set()
   );
 
   const handleSelectExpenseRow = (id: string) => {
     setSelectedExpenseIds((prev) => {
-      const selectedIds = prev;
+      const selectedIds = new Set(prev);
       if (selectedIds.has(id)) {
         selectedIds.delete(id);
       } else {
@@ -52,6 +48,14 @@ export const ExpensesTable = (props: ExpensesTableProps) => {
       }
       return selectedIds;
     });
+  };
+
+  const handleSelectAllExpenseRows = (e: ChangeEvent<HTMLInputElement>) => {
+    setSelectedExpenseIds(
+      e.target.checked
+        ? new Set(expenses.map((expense) => expense.id))
+        : new Set()
+    );
   };
 
   const highestSpendingCategories = useMemo(() => {
@@ -84,7 +88,10 @@ export const ExpensesTable = (props: ExpensesTableProps) => {
   return (
     <>
       <HStack spacing={4} pb={6} direction="row" justify="flex-end">
-        <AddExpenseModal />
+        <AddExpenseModal
+          editingExpense={editingExpense}
+          setEditingExpense={setEditingExpense}
+        />
         <DeleteExpenses
           selectedExpenseIds={selectedExpenseIds}
           setSelectedExpenseIds={setSelectedExpenseIds}
@@ -94,10 +101,16 @@ export const ExpensesTable = (props: ExpensesTableProps) => {
         <Table variant="simple">
           <Thead>
             <Tr>
-              <Th></Th>
+              <Th>
+                <Checkbox
+                  borderColor="yellow.600"
+                  onChange={handleSelectAllExpenseRows}
+                />
+              </Th>
               <Th>Item</Th>
               <Th>Category</Th>
               <Th isNumeric>Amount</Th>
+              <Th></Th>
             </Tr>
           </Thead>
           <Tbody>
@@ -106,19 +119,25 @@ export const ExpensesTable = (props: ExpensesTableProps) => {
                 key={expense.id}
                 bgColor={
                   highestSpendingCategories.includes(expense.category)
-                    ? "blue.100"
+                    ? "gray.300"
                     : ""
                 }
               >
                 <Td>
                   <Checkbox
-                    borderColor="blue.600"
+                    borderColor="yellow.600"
+                    isChecked={selectedExpenseIds.has(expense.id)}
                     onChange={(e) => handleSelectExpenseRow(expense.id)}
                   />
                 </Td>
                 <Td>{expense.name}</Td>
                 <Td>{expense.category}</Td>
                 <Td isNumeric>{numberToUSD(expense.amount)}</Td>
+                <Td w={1}>
+                  <Button onClick={(_) => setEditingExpense(expense)}>
+                    <EditIcon color="yellow.700" />
+                  </Button>
+                </Td>
               </Tr>
             ))}
           </Tbody>

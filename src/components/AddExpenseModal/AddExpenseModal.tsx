@@ -1,35 +1,31 @@
 "use client";
 import * as z from "zod";
 
+import { createExpense, editExpense } from "@/actions/expenseActions";
 import {
-  Box,
   Button,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
   Grid,
-  HStack,
-  Input,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  Select,
-  Stack,
-  Text,
-  VStack,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-
-import { createExpense } from "@/actions/expenseActions";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState, useTransition } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  Suspense,
+  useEffect,
+  useTransition,
+} from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { TypeAnimation } from "react-type-animation";
-import { CatExpenseCategory, CatExpenseFormData } from "./types";
+import { CatExpenseFormData, type Expense } from "../types";
+import { CatFact } from "./CatFact";
+import { ExpenseForm } from "./ExpenseForm";
 
 const expenseFormValidationSchema = z.object({
   name: z.string().nonempty("Please enter item name"),
@@ -38,10 +34,17 @@ const expenseFormValidationSchema = z.object({
     .number({
       invalid_type_error: "Please enter a valid amount",
     })
-    .min(0),
+    .min(0.01, "amount should be greater than 0"),
 });
 
-export const AddExpenseModal = () => {
+type AddExpenseModalProps = {
+  editingExpense?: Expense | null;
+  setEditingExpense?: Dispatch<SetStateAction<Expense | null>>;
+};
+
+export const AddExpenseModal = (props: AddExpenseModalProps) => {
+  const { editingExpense, setEditingExpense } = props;
+
   const toast = useToast({
     isClosable: true,
     duration: 2000,
@@ -49,30 +52,26 @@ export const AddExpenseModal = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isPending, startTransition] = useTransition();
 
-  const [catFact, setCatFact] = useState("");
-
-  const {
-    register,
-    handleSubmit,
-    watch,
-    reset,
-    formState: { isValid, errors },
-  } = useForm<CatExpenseFormData>({
-    mode: "onChange",
-    resolver: zodResolver(expenseFormValidationSchema),
-  });
+  const { register, handleSubmit, reset, formState } =
+    useForm<CatExpenseFormData>({
+      mode: "onChange",
+      resolver: zodResolver(expenseFormValidationSchema),
+    });
 
   const onSubmitExpenseForm: SubmitHandler<CatExpenseFormData> = async (
     data
   ) => {
     startTransition(() => {
-      createExpense(data)
+      const mutation = editingExpense
+        ? editExpense(editingExpense.id, data)
+        : createExpense(data);
+      mutation
         .then((_) => {
           toast({
             title: "Expense created successfully",
             status: "success",
           });
-          onCloseExpenseForm();
+          onCloseExpenseModal();
         })
         .catch((error) =>
           toast({
@@ -83,120 +82,40 @@ export const AddExpenseModal = () => {
     });
   };
 
-  const onOpenExpenseModal = () => {
-    onOpen();
-    fetch("https://catfact.ninja/fact", {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-    })
-      .then((response) => response.json())
-      .then((responseJson) => {
-        setCatFact(responseJson.fact);
-      });
-  };
-
-  const onCloseExpenseForm = () => {
+  const onCloseExpenseModal = () => {
+    if (editingExpense) setEditingExpense?.(null);
     reset();
     onClose();
   };
 
+  useEffect(() => {
+    if (!editingExpense) return;
+    if (!isOpen) onOpen();
+    reset(editingExpense);
+  }, [isOpen, editingExpense]);
+
   return (
     <>
-      <Button variant="outline" colorScheme="blue" onClick={onOpenExpenseModal}>
+      <Button variant="outline" colorScheme="yellow" onClick={onOpen}>
         Add Expense
       </Button>
-      <Modal isOpen={isOpen} size="2xl" onClose={onCloseExpenseForm}>
+      <Modal isOpen={isOpen} size="2xl" onClose={onCloseExpenseModal}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Add Expense</ModalHeader>
+          <ModalHeader>{editingExpense ? "Edit" : "Add"} Expense</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Grid templateColumns="repeat(2, 1fr)" gap={6}>
-              <form onSubmit={handleSubmit(onSubmitExpenseForm)}>
-                <VStack spacing={5}>
-                  <FormControl isRequired isInvalid={!!errors.name}>
-                    <FormLabel fontSize="sm" m={1} color="GrayText">
-                      Item
-                    </FormLabel>
-                    <Input
-                      type="text"
-                      placeholder="Enter Item Name"
-                      {...register("name")}
-                    />
-                    <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
-                  </FormControl>
-                  <FormControl isRequired isInvalid={!!errors.category}>
-                    <FormLabel fontSize="sm" m={1} color="GrayText">
-                      Category
-                    </FormLabel>
-                    <Select
-                      placeholder="Select option"
-                      {...register("category")}
-                    >
-                      {Object.values(CatExpenseCategory).map(
-                        (category, index) => (
-                          <option key={index} value={category}>
-                            {category}
-                          </option>
-                        )
-                      )}
-                    </Select>
-                    <FormErrorMessage>
-                      {errors.category?.message}
-                    </FormErrorMessage>
-                  </FormControl>
-                  <FormControl isRequired isInvalid={!!errors.amount}>
-                    <FormLabel fontSize="sm" m={1} color="GrayText">
-                      Amount
-                    </FormLabel>
-                    <Input
-                      type="number"
-                      {...register("amount", {
-                        valueAsNumber: true,
-                      })}
-                    />
-                    <FormErrorMessage>
-                      {errors.amount?.message}
-                    </FormErrorMessage>
-                  </FormControl>
-                  <HStack w="full" p={2} justify="flex-end">
-                    <Button
-                      variant="outline"
-                      colorScheme="blue"
-                      mr={3}
-                      onClick={onCloseExpenseForm}
-                    >
-                      Close
-                    </Button>
-                    <Button
-                      type="submit"
-                      variant="outline"
-                      colorScheme="blue"
-                      isDisabled={!isValid}
-                      isLoading={isPending}
-                    >
-                      Submit
-                    </Button>
-                  </HStack>
-                </VStack>
-              </form>
-              <Stack>
-                <Text as="samp" fontSize="md" color="blue.600" my={2}>
-                  Random cat Fact:
-                </Text>
-                <Box>
-                  <TypeAnimation
-                    sequence={[catFact]}
-                    wrapper="span"
-                    speed={55}
-                    style={{
-                      fontSize: "15px",
-                      display: "inline-block",
-                      fontStyle: "italic",
-                    }}
-                  />
-                </Box>
-              </Stack>
+              <ExpenseForm
+                isLoading={isPending}
+                formState={formState}
+                register={register}
+                onClose={onCloseExpenseModal}
+                onSubmit={handleSubmit(onSubmitExpenseForm)}
+              />
+              <Suspense fallback="loading">
+                <CatFact isOpen={isOpen} />
+              </Suspense>
             </Grid>
           </ModalBody>
         </ModalContent>
