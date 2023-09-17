@@ -79,10 +79,13 @@ export const AddExpenseModal = (props: AddExpenseModalProps) => {
       const mutation = editingExpense
         ? editExpense(editingExpense.id, data)
         : createExpense(data);
+      const successMessage = editingExpense
+        ? "Expense updated successfully"
+        : "Expense created successfully";
       mutation
         .then((_) => {
           toast({
-            title: "Expense created successfully",
+            title: successMessage,
             status: "success",
           });
           onCloseExpenseModal();
