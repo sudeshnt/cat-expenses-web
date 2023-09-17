@@ -1,21 +1,20 @@
 import { deleteExpenses } from "@/actions/expenseActions";
 import {
-  useDisclosure,
-  Button,
   AlertDialog,
-  AlertDialogOverlay,
-  AlertDialogContent,
-  AlertDialogHeader,
   AlertDialogBody,
+  AlertDialogContent,
   AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
+  Button,
+  useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import {
   Dispatch,
-  LegacyRef,
   SetStateAction,
   useRef,
-  useTransition,
+  useTransition
 } from "react";
 
 type DeleteExpensesProps = {

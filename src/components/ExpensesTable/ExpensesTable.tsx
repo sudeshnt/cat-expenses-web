@@ -11,13 +11,13 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { AddExpenseModal } from "../AddExpenseModal";
-import { numberToUSD } from "./utils/currencyUtils";
-import { useMemo, useState } from "react";
-import { DeleteExpenses } from "./DeleteConfirmationAlert";
 import groupBy from "lodash/groupBy";
 import sumBy from "lodash/sumBy";
+import { useMemo, useState } from "react";
+import { AddExpenseModal } from "../AddExpenseModal";
 import { CatExpenseCategory } from "../AddExpenseModal/types";
+import { DeleteExpenses } from "../DeleteExpenseModal";
+import { numberToUSD } from "./utils/currencyUtils";
 
 type Expense = {
   id: string;
@@ -90,7 +90,7 @@ export const ExpensesTable = (props: ExpensesTableProps) => {
           setSelectedExpenseIds={setSelectedExpenseIds}
         />
       </HStack>
-      <TableContainer className="max-h-full" overflowY="scroll">
+      <TableContainer className="max-h-[calc(100%-70px)]" overflowY="scroll">
         <Table variant="simple">
           <Thead>
             <Tr>
