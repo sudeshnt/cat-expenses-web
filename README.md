@@ -68,11 +68,11 @@
 - [React.js](https://reactjs.org/)
 - [Next.js](https://nextjs.org/docs)
 - [Typescript](https://www.typescriptlang.org/)
-- [Ant Design](https://chakra-ui.com/)
-- [Lodash](https://lodash.com/)
+- [Chakra UI](https://chakra-ui.com/)
 - [Tailwind CSS](https://tailwindcss.com/)
 - [React Hook Form](https://www.react-hook-form.com/)
 - [Zod](https://zod.dev/)
+- [Lodash](https://lodash.com/)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
