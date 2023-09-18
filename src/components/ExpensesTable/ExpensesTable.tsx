@@ -1,5 +1,6 @@
 "use client";
 
+import { populateExpenses } from "@/actions/expenseActions";
 import { EditIcon } from "@chakra-ui/icons";
 import {
   Button,
@@ -15,12 +16,14 @@ import {
   Th,
   Thead,
   Tr,
+  useToast,
 } from "@chakra-ui/react";
 import groupBy from "lodash/groupBy";
 import sumBy from "lodash/sumBy";
-import { ChangeEvent, useMemo, useState } from "react";
+import { ChangeEvent, useMemo, useState, useTransition } from "react";
 import { AddExpenseModal } from "../AddExpenseModal";
 import { DeleteExpenses } from "../DeleteExpenseModal";
+import { MOCK_EXPENSES } from "../mock";
 import { Expense } from "../types";
 import { numberToUSD } from "./utils/currencyUtils";
 
@@ -36,10 +39,12 @@ type HighestSpendingCategoryResult = {
 export const ExpensesTable = (props: ExpensesTableProps) => {
   const { expenses } = props;
 
+  const toast = useToast();
   const [editingExpense, setEditingExpense] = useState<Expense | null>(null);
   const [selectedExpenseIds, setSelectedExpenseIds] = useState<Set<string>>(
     new Set()
   );
+  const [isPending, startTransition] = useTransition();
 
   const handleSelectExpenseRow = (id: string) => {
     setSelectedExpenseIds((prev) => {
@@ -59,6 +64,24 @@ export const ExpensesTable = (props: ExpensesTableProps) => {
         ? new Set(expenses.map((expense) => expense.id))
         : new Set()
     );
+  };
+
+  const handleBulkCreateExpenses = () => {
+    startTransition(() => {
+      populateExpenses(MOCK_EXPENSES)
+        .then((_) =>
+          toast({
+            title: "Expense(s) deleted successfully",
+            status: "success",
+          })
+        )
+        .catch((error) =>
+          toast({
+            title: (error as Error).message,
+            status: "error",
+          })
+        );
+    });
   };
 
   const highestSpendingCategories = useMemo(() => {
@@ -154,10 +177,17 @@ export const ExpensesTable = (props: ExpensesTableProps) => {
               <Tr>
                 <Td colSpan={5}>
                   <Stack alignItems="center">
-                    <Image src="./empty-state.svg" h={300} />
+                    <Image src="./empty-state.svg" h={300} alt="empty-state" />
                     <Text fontSize="md" color="gray.600">
                       No expenses found!
                     </Text>
+                    <Button
+                      colorScheme="yellow"
+                      size="xs"
+                      onClick={handleBulkCreateExpenses}
+                    >
+                      Populate Table
+                    </Button>
                   </Stack>
                 </Td>
               </Tr>

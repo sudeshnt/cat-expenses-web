@@ -70,3 +70,22 @@ export async function deleteExpenses(idList: string[]) {
     throw new Error("Delete expense failed!");
   }
 }
+
+/**
+ * Populates expenses data in the MongoDB database.
+ *
+ * @async
+ * @function
+ * @param {CatExpenseFormData[]} data - An array of expense data to be inserted.
+ * @throws {Error} Throws an error if the operation fails.
+ * @returns {Promise<void>} A promise that resolves when the operation is complete.
+ */
+export async function populateExpenses(data: CatExpenseFormData[]) {
+  try {
+    await connectToMongoDB();
+    await Expense.insertMany(data);
+    revalidatePath("/");
+  } catch (error) {
+    throw new Error("Create expense failed!");
+  }
+}

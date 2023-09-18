@@ -172,6 +172,7 @@ export const AddExpenseModal = (props: AddExpenseModalProps) => {
                       </InputLeftElement>
                       <Input
                         type="number"
+                        step="0.01"
                         {...register("amount", {
                           valueAsNumber: true,
                         })}
