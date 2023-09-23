@@ -14,9 +14,5 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-      - uses: pnpm/action-setup@v2
-        with:
-          version: 8
-          run_install: false
-      - run: pnpm i
-      - run: pnpm lint
+      - run: npm i
+      - run: npm run lint
