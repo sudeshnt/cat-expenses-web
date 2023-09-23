@@ -7,7 +7,7 @@ export default async function Home() {
 
   return (
     <main className="flex h-screen flex-col items-center py-20">
-      <div className="w-full h-full max-w-3xl p-6 bg-slate-200 bg-opacity-95">
+      <div className="w-full h-full p-6 bg-slate-200 bg-opacity-95 max-w-4xl">
         <ExpensesTable expenses={JSON.parse(JSON.stringify(expenses))} />
       </div>
     </main>

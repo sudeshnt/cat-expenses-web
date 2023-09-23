@@ -46,7 +46,7 @@ export function DeleteExpenses(props: DeleteExpensesProps): JSX.Element {
       deleteExpenses(Array.from(selectedExpenseIds))
         .then((_) => {
           toast({
-            title: "Expense(s) deleted successfully",
+            title: "Expenses deleted successfully",
             status: "success",
           });
           setSelectedExpenseIds(new Set());

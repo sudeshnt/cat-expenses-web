@@ -10,12 +10,14 @@ import {
   Stack,
   Table,
   TableContainer,
+  Tag,
   Tbody,
   Td,
   Text,
   Th,
   Thead,
   Tr,
+  VStack,
   useToast,
 } from "@chakra-ui/react";
 import groupBy from "lodash/groupBy";
@@ -40,11 +42,20 @@ export const ExpensesTable = (props: ExpensesTableProps) => {
   const { expenses } = props;
 
   const toast = useToast();
+  const [_, startTransition] = useTransition();
+
   const [editingExpense, setEditingExpense] = useState<Expense | null>(null);
   const [selectedExpenseIds, setSelectedExpenseIds] = useState<Set<string>>(
     new Set()
   );
-  const [isPending, startTransition] = useTransition();
+
+  const isSelectedAll = selectedExpenseIds.size === expenses.length;
+  const isIndeterminate = !isSelectedAll && selectedExpenseIds.size > 0;
+
+  const totalSpending = useMemo(
+    () => expenses.reduce((acc, curr) => acc + curr.amount, 0),
+    [expenses]
+  );
 
   const handleSelectExpenseRow = (id: string) => {
     setSelectedExpenseIds((prev) => {
@@ -71,7 +82,7 @@ export const ExpensesTable = (props: ExpensesTableProps) => {
       populateExpenses(MOCK_EXPENSES)
         .then((_) =>
           toast({
-            title: "Expense(s) deleted successfully",
+            title: "Expenses populated successfully",
             status: "success",
           })
         )
@@ -84,12 +95,10 @@ export const ExpensesTable = (props: ExpensesTableProps) => {
     });
   };
 
-  const highestSpendingCategories = useMemo(() => {
-    if (expenses.length === 0) return [];
-
+  const { highestSpendingCategories, highestSpending } = useMemo(() => {
     const expenseGroups = groupBy(expenses, "category");
 
-    const result = Object.entries(expenseGroups).reduce(
+    return Object.entries(expenseGroups).reduce(
       (acc, [category, expenses]) => {
         const totalSpend = sumBy(expenses, "amount");
         if (totalSpend > acc.highestSpending) {
@@ -107,21 +116,46 @@ export const ExpensesTable = (props: ExpensesTableProps) => {
         highestSpendingCategories: [],
       } as HighestSpendingCategoryResult
     );
-
-    return result.highestSpendingCategories;
   }, [expenses]);
 
   return (
     <>
-      <HStack spacing={4} pb={6} direction="row" justify="flex-end">
-        <AddExpenseModal
-          editingExpense={editingExpense}
-          setEditingExpense={setEditingExpense}
-        />
-        <DeleteExpenses
-          selectedExpenseIds={selectedExpenseIds}
-          setSelectedExpenseIds={setSelectedExpenseIds}
-        />
+      <HStack spacing={4} pb={6} direction="row" justify="space-between">
+        <VStack alignItems="flex-start">
+          {highestSpendingCategories.length > 0 && (
+            <>
+              <HStack spacing={2}>
+                <HStack alignItems="flex-end" spacing={1}>
+                  <Text fontSize="sm" color="gray.600" ml={2}>
+                    Highest Spending Category
+                  </Text>
+                  <Text fontSize="2xs" color="gray.400">
+                    ({numberToUSD(highestSpending)})
+                  </Text>
+                </HStack>
+                {highestSpendingCategories.map((category) => (
+                  <Tag key={category}>{category}</Tag>
+                ))}
+              </HStack>
+              <HStack spacing={2}>
+                <Text fontSize="sm" color="gray.600" ml={2}>
+                  Total Spending:
+                </Text>
+                <Tag>{numberToUSD(totalSpending)}</Tag>
+              </HStack>
+            </>
+          )}
+        </VStack>
+        <HStack spacing={2}>
+          <AddExpenseModal
+            editingExpense={editingExpense}
+            setEditingExpense={setEditingExpense}
+          />
+          <DeleteExpenses
+            selectedExpenseIds={selectedExpenseIds}
+            setSelectedExpenseIds={setSelectedExpenseIds}
+          />
+        </HStack>
       </HStack>
       <TableContainer className="max-h-[calc(100%-70px)]" overflowY="scroll">
         <Table variant="simple">
@@ -131,6 +165,8 @@ export const ExpensesTable = (props: ExpensesTableProps) => {
                 <Checkbox
                   colorScheme="orange"
                   borderColor="yellow.600"
+                  isChecked={isSelectedAll}
+                  isIndeterminate={isIndeterminate}
                   onChange={handleSelectAllExpenseRows}
                 />
               </Th>
@@ -144,7 +180,7 @@ export const ExpensesTable = (props: ExpensesTableProps) => {
           </Thead>
           <Tbody>
             {expenses.length > 0 ? (
-              expenses.map((expense, index) => (
+              expenses.map((expense) => (
                 <Tr
                   key={expense.id}
                   bgColor={
@@ -158,7 +194,7 @@ export const ExpensesTable = (props: ExpensesTableProps) => {
                       colorScheme="orange"
                       borderColor="yellow.600"
                       isChecked={selectedExpenseIds.has(expense.id)}
-                      onChange={(e) => handleSelectExpenseRow(expense.id)}
+                      onChange={(_) => handleSelectExpenseRow(expense.id)}
                     />
                   </Td>
                   <Td color="gray.600">{expense.name}</Td>
