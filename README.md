@@ -9,7 +9,7 @@
 <br />
 <div align="center">
   <a href="">
-    <img src="public/logo.png" alt="Logo" height="100">
+    <img src="public/logo.jpg" alt="Logo" height="100">
   </a>
   <h1 align="center">Cat Expenses App</h1>
   <p align="center">
