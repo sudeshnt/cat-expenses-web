@@ -66,14 +66,15 @@
 
 <!-- - I have used [Vercel](https://vercel.com/) to host this application to provide a quick preview to the observers. -->
 
-- [React.js](https://reactjs.org/)
+- [React.js](https://reactjs.org)
 - [Next.js](https://nextjs.org/docs)
-- [Typescript](https://www.typescriptlang.org/)
-- [Chakra UI](https://chakra-ui.com/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [React Hook Form](https://www.react-hook-form.com/)
-- [Zod](https://zod.dev/)
-- [Lodash](https://lodash.com/)
+- [Typescript](https://www.typescriptlang.org)
+- [Chakra UI](https://chakra-ui.com)
+- [Tailwind CSS](https://tailwindcss.com)
+- [React Hook Form](https://www.react-hook-form.com)
+- [Zod](https://zod.dev)
+- [Lodash](https://lodash.com)
+- [MongoDB](https://www.mongodb.com) & [Mongoose ORM](https://mongoosejs.com)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
