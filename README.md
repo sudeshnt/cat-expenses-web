@@ -54,10 +54,10 @@
 
 ### In this Application you have the ability to
 
-- Populate a list of cat expenses
-- Create new cat expense or edit existing expense
+- Create new cat expense or update existing expense
 - Delete multiple cat expenses
-- See the expenses with highest spending category
+- Populate table with a mock list of cat expenses
+- Highlight the expenses with highest spending category
 - Learn about cats with random cat facts
 
 <p align="right">(<a href="#top">back to top</a>)</p>
