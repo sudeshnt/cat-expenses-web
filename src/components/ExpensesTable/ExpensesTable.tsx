@@ -1,6 +1,8 @@
 "use client";
 
 import { populateExpenses } from "@/actions/expenseActions";
+import { MOCK_EXPENSES } from "@/mocks";
+import { Expense } from "@/types";
 import { EditIcon } from "@chakra-ui/icons";
 import {
   Button,
@@ -10,7 +12,6 @@ import {
   Stack,
   Table,
   TableContainer,
-  Tag,
   Tbody,
   Td,
   Text,
@@ -25,17 +26,14 @@ import sumBy from "lodash/sumBy";
 import { ChangeEvent, useMemo, useState, useTransition } from "react";
 import { AddExpenseModal } from "../AddExpenseModal";
 import { DeleteExpenses } from "../DeleteExpenseModal";
-import { MOCK_EXPENSES } from "../mock";
-import { Expense } from "../types";
+import {
+  ExpenseSummary,
+  HighestSpendingCategoryResult,
+} from "./ExpenseSummary";
 import { numberToUSD } from "./utils/currencyUtils";
 
 type ExpensesTableProps = {
   expenses: Expense[];
-};
-
-type HighestSpendingCategoryResult = {
-  highestSpending: number;
-  highestSpendingCategories: string[];
 };
 
 export const ExpensesTable = (props: ExpensesTableProps) => {
@@ -56,6 +54,29 @@ export const ExpensesTable = (props: ExpensesTableProps) => {
     () => expenses.reduce((acc, curr) => acc + curr.amount, 0),
     [expenses]
   );
+
+  const { highestSpendingCategories, highestSpending } = useMemo(() => {
+    const expenseGroups = groupBy(expenses, "category");
+
+    return Object.entries(expenseGroups).reduce(
+      (acc, [category, expenses]) => {
+        const totalSpend = sumBy(expenses, "amount");
+        if (totalSpend > acc.highestSpending) {
+          return {
+            highestSpending: totalSpend,
+            highestSpendingCategories: [category],
+          };
+        } else if (totalSpend === acc.highestSpending) {
+          acc.highestSpendingCategories.push(category);
+        }
+        return acc;
+      },
+      {
+        highestSpending: 0,
+        highestSpendingCategories: [],
+      } as HighestSpendingCategoryResult
+    );
+  }, [expenses]);
 
   const handleSelectExpenseRow = (id: string) => {
     setSelectedExpenseIds((prev) => {
@@ -95,55 +116,16 @@ export const ExpensesTable = (props: ExpensesTableProps) => {
     });
   };
 
-  const { highestSpendingCategories, highestSpending } = useMemo(() => {
-    const expenseGroups = groupBy(expenses, "category");
-
-    return Object.entries(expenseGroups).reduce(
-      (acc, [category, expenses]) => {
-        const totalSpend = sumBy(expenses, "amount");
-        if (totalSpend > acc.highestSpending) {
-          return {
-            highestSpending: totalSpend,
-            highestSpendingCategories: [category],
-          };
-        } else if (totalSpend === acc.highestSpending) {
-          acc.highestSpendingCategories.push(category);
-        }
-        return acc;
-      },
-      {
-        highestSpending: 0,
-        highestSpendingCategories: [],
-      } as HighestSpendingCategoryResult
-    );
-  }, [expenses]);
-
   return (
     <>
       <HStack spacing={4} pb={6} direction="row" justify="space-between">
         <VStack alignItems="flex-start">
           {highestSpendingCategories.length > 0 && (
-            <>
-              <HStack spacing={2}>
-                <HStack alignItems="flex-end" spacing={1}>
-                  <Text fontSize="sm" color="gray.600" ml={2}>
-                    Highest Spending Category
-                  </Text>
-                  <Text fontSize="2xs" color="gray.400">
-                    ({numberToUSD(highestSpending)})
-                  </Text>
-                </HStack>
-                {highestSpendingCategories.map((category) => (
-                  <Tag key={category}>{category}</Tag>
-                ))}
-              </HStack>
-              <HStack spacing={2}>
-                <Text fontSize="sm" color="gray.600" ml={2}>
-                  Total Spending:
-                </Text>
-                <Tag>{numberToUSD(totalSpending)}</Tag>
-              </HStack>
-            </>
+            <ExpenseSummary
+              highestSpendingCategories={highestSpendingCategories}
+              highestSpending={highestSpending}
+              totalSpending={totalSpending}
+            />
           )}
         </VStack>
         <HStack spacing={2}>

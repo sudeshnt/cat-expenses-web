@@ -1,4 +1,4 @@
-import { Box, Skeleton, Stack, Text } from "@chakra-ui/react";
+import { Box, SkeletonText, Stack, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { TypeAnimation } from "react-type-animation";
 
@@ -41,10 +41,7 @@ export const CatFact = ({ isOpen }: CatFactProps): JSX.Element => {
           />
         </Box>
       ) : (
-        <>
-          <Skeleton height="20px" />
-          <Skeleton height="20px" />
-        </>
+        <SkeletonText noOfLines={4} spacing={3} skeletonHeight={2} />
       )}
     </Stack>
   );

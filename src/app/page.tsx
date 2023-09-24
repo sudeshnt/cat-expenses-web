@@ -1,14 +1,18 @@
+import { ExpensesTable } from "@/components/ExpensesTable";
+import { Expense as ExpenseType } from "@/types";
+import pick from "lodash/pick";
 import { connectToMongoDB, Expense } from "../../db";
-import { ExpensesTable } from "../components/ExpensesTable";
 
 export default async function Home() {
   await connectToMongoDB();
-  const expenses = await Expense.find();
+  const expenses: ExpenseType[] = (await Expense.find()).map((expense) =>
+    pick(expense, ["id", "name", "category", "amount"])
+  );
 
   return (
     <main className="flex h-screen flex-col items-center py-20">
       <div className="w-full h-full p-6 bg-slate-200 bg-opacity-95 max-w-4xl">
-        <ExpensesTable expenses={JSON.parse(JSON.stringify(expenses))} />
+        <ExpensesTable expenses={expenses} />
       </div>
     </main>
   );

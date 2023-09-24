@@ -3,6 +3,7 @@
 import * as z from "zod";
 
 import { createExpense, editExpense } from "@/actions/expenseActions";
+import { CatExpenseCategory, CatExpenseFormData, type Expense } from "@/types";
 import {
   Button,
   FormControl,
@@ -27,7 +28,6 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Dispatch, SetStateAction, useEffect, useTransition } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { CatExpenseCategory, CatExpenseFormData, type Expense } from "../types";
 import { CatFact } from "./CatFact";
 
 const defaultValues = {
@@ -82,6 +82,7 @@ export const AddExpenseModal = (props: AddExpenseModalProps) => {
       const successMessage = editingExpense
         ? "Expense updated successfully"
         : "Expense created successfully";
+
       mutation
         .then((_) => {
           toast({

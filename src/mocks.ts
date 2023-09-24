@@ -1,7 +1,4 @@
-import {
-  CatExpenseCategory as Category,
-  CatExpenseFormData,
-} from "@/components/types";
+import { CatExpenseCategory as Category, CatExpenseFormData } from "@/types";
 
 export const MOCK_EXPENSES = [
   { name: "Cat Food", category: Category.Food, amount: 25.95 },
