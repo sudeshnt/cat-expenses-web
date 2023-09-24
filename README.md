@@ -25,6 +25,7 @@
     <li>
       <a href="#about-the-project">About The Project</a>
       <ul>
+        <li><a href="#in-this-application-you-have-the-ability-to">Features</a></li>
         <li><a href="#built-with">Built With</a></li>
       </ul>
     </li>
