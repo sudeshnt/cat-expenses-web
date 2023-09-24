@@ -1,6 +1,6 @@
 "use server";
 
-import { CatExpenseFormData } from "@/components/types";
+import { CatExpenseFormData } from "@/types";
 import { revalidatePath } from "next/cache";
 import { connectToMongoDB, Expense } from "../../db";
 
