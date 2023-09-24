@@ -7,7 +7,6 @@ import { EditIcon } from "@chakra-ui/icons";
 import {
   Button,
   Checkbox,
-  HStack,
   Image,
   Stack,
   Table,
@@ -118,8 +117,14 @@ export const ExpensesTable = (props: ExpensesTableProps) => {
 
   return (
     <>
-      <HStack spacing={4} pb={6} direction="row" justify="space-between">
-        <VStack alignItems="flex-start">
+      <Stack
+        spacing={4}
+        pb={6}
+        direction={["column", "row"]}
+        justify="space-between"
+        wrap="wrap"
+      >
+        <VStack alignItems="flex-start" minW={260}>
           {highestSpendingCategories.length > 0 && (
             <ExpenseSummary
               highestSpendingCategories={highestSpendingCategories}
@@ -128,7 +133,12 @@ export const ExpensesTable = (props: ExpensesTableProps) => {
             />
           )}
         </VStack>
-        <HStack spacing={2}>
+        <Stack
+          direction={["column", "row"]}
+          spacing={2}
+          flex={1}
+          justifyContent="flex-end"
+        >
           <AddExpenseModal
             editingExpense={editingExpense}
             setEditingExpense={setEditingExpense}
@@ -137,9 +147,9 @@ export const ExpensesTable = (props: ExpensesTableProps) => {
             selectedExpenseIds={selectedExpenseIds}
             setSelectedExpenseIds={setSelectedExpenseIds}
           />
-        </HStack>
-      </HStack>
-      <TableContainer className="max-h-[calc(100%-70px)]" overflowY="scroll">
+        </Stack>
+      </Stack>
+      <TableContainer overflowY="scroll">
         <Table variant="simple">
           <Thead bg="#f1e0cf">
             <Tr>
@@ -165,6 +175,7 @@ export const ExpensesTable = (props: ExpensesTableProps) => {
               expenses.map((expense) => (
                 <Tr
                   key={expense.id}
+                  opacity={0.8}
                   bgColor={
                     highestSpendingCategories.includes(expense.category)
                       ? "gray.300"
@@ -179,9 +190,9 @@ export const ExpensesTable = (props: ExpensesTableProps) => {
                       onChange={(_) => handleSelectExpenseRow(expense.id)}
                     />
                   </Td>
-                  <Td color="gray.600">{expense.name}</Td>
-                  <Td color="gray.600">{expense.category}</Td>
-                  <Td isNumeric color="gray.600">
+                  <Td color="gray.700">{expense.name}</Td>
+                  <Td color="gray.700">{expense.category}</Td>
+                  <Td isNumeric color="gray.700">
                     {numberToUSD(expense.amount)}
                   </Td>
                   <Td w={1}>

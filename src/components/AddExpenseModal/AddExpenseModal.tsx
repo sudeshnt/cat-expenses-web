@@ -37,7 +37,10 @@ const defaultValues = {
 };
 
 const expenseFormValidationSchema = z.object({
-  name: z.string().nonempty("Please enter item name"),
+  name: z
+    .string()
+    .nonempty("Please enter item name")
+    .max(30, "Item name must be 30 characters or less"),
   category: z.string().nonempty("Please enter category"),
   amount: z
     .number({

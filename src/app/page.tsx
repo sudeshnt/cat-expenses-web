@@ -10,8 +10,8 @@ export default async function Home() {
   );
 
   return (
-    <main className="flex h-screen flex-col items-center py-20">
-      <div className="w-full h-full p-6 bg-slate-200 bg-opacity-95 max-w-4xl">
+    <main className="flex h-screen flex-col items-center py-[5vw]">
+      <div className="flex flex-col w-full h-full p-6 bg-slate-200 bg-opacity-95 max-w-4xl">
         <ExpensesTable expenses={expenses} />
       </div>
     </main>
