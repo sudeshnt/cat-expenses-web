@@ -1,0 +1,23 @@
+name: Build Next.js App
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+          run_install: false
+      - run: pnpm i
+      - name: Build Next.js app
+        run: pnpm run build
