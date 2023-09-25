@@ -46,7 +46,8 @@ export const ExpensesTable = (props: ExpensesTableProps) => {
     new Set()
   );
 
-  const isSelectedAll = selectedExpenseIds.size === expenses.length;
+  const isSelectedAll =
+    expenses.length > 0 && selectedExpenseIds.size === expenses.length;
   const isIndeterminate = !isSelectedAll && selectedExpenseIds.size > 0;
 
   const totalSpending = useMemo(
