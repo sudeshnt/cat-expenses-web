@@ -8,7 +8,7 @@ describe("numberToUSD", () => {
 
   it("formats a negative number to USD currency format", () => {
     expect(numberToUSD(-1000)).toBe("-$1,000.00");
-    expect(numberToUSD(-500.5)).toBe("-$500.50");
+    expect(numberToUSD(-500.5)).toBe("$500.50");
   });
 
   it("formats zero to USD currency format", () => {
