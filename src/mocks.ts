@@ -1,7 +1,7 @@
 import { CatExpenseCategory as Category, CatExpenseFormData } from "@/types";
 
 export const MOCK_EXPENSES = [
-  { name: "Cat Food", category: Category.Food, amount: 25.95 },
+  { name: "Cat Foods", category: Category.Food, amount: 25.95 },
   { name: "Litter Box", category: Category.Furniture, amount: 59.99 },
   { name: "Cat Toys", category: Category.Accessory, amount: 12.49 },
   {
